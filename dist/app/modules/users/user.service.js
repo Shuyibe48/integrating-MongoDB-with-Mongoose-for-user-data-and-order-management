@@ -13,7 +13,6 @@ exports.UsersServices = void 0;
 const user_models_1 = require("../user.models");
 const createUserInToDb = (userData) => __awaiter(void 0, void 0, void 0, function* () {
     const result = yield user_models_1.User.create(userData);
-    console.log(result);
     return result;
 });
 exports.UsersServices = {
