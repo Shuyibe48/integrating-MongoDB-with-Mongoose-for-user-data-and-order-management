@@ -54,7 +54,6 @@ UserSchema.pre("save", function (next) {
 // post save middleware/hook : will work on create() save()
 UserSchema.post("save", function (doc, next) {
     doc.password = "";
-    // console.log(this, 'post hook: we saved our Data');
     next();
 });
 exports.User = (0, mongoose_1.model)("User", UserSchema);

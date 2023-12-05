@@ -7,8 +7,8 @@ exports.UserRoutes = void 0;
 const express_1 = __importDefault(require("express"));
 const user_controller_1 = require("./user.controller");
 const router = express_1.default.Router();
+router.get('/users', user_controller_1.UserControllers.getUsers);
 router.post('/create-user', user_controller_1.UserControllers.createUser);
-// router.get('/')
 // router.put('/user')
 // router.delete('/user')
 exports.UserRoutes = router;

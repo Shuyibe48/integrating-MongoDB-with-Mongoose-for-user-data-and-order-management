@@ -29,6 +29,11 @@ const createUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         });
     }
 });
+const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const result = yield user_service_1.UsersServices.getUsersFromDB();
+    return result;
+});
 exports.UserControllers = {
     createUser,
+    getUsers,
 };
