@@ -8,7 +8,7 @@ const createUser = async (req: Request, res: Response) => {
 
     res.status(200).json({
       success: true,
-      message: "Student created successfully!",
+      message: "User created successfully!",
       data: result,
     });
   } catch (err: any) {
@@ -20,12 +20,12 @@ const createUser = async (req: Request, res: Response) => {
   }
 };
 
-const getUsers = async (req:Request, res: Response)=> {
+const getUsers = async (req: Request, res: Response) => {
   try {
     const result = await UsersServices.getUsersFromDB();
     res.status(200).json({
       success: true,
-      message: 'Users are retrieved successfully',
+      message: "Users fetched successfully!",
       data: result,
     });
   } catch (err: any) {
@@ -35,9 +35,37 @@ const getUsers = async (req:Request, res: Response)=> {
       data: err,
     });
   }
-}
+};
+
+const getUserById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UsersServices.getUserById(userId)
+
+    if(result){
+      res.status(200).json({
+        success: true,
+        message: 'User fetched successfully!',
+        data: result
+      })
+    }else{
+      res.status(400).json({
+        success: false,
+        message: 'No user found!',
+        data: result
+      })
+    }
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong!",
+      data: err,
+    });
+  }
+};
 
 export const UserControllers = {
   createUser,
   getUsers,
+  getUserById,
 };

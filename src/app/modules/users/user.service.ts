@@ -15,7 +15,13 @@ const getUsersFromDB = async () => {
     return result
 }
 
+const getUserById = async (userId: string)=> {
+    const result = await User.isUserExists(userId)
+    return result
+}
+
 export const UsersServices = {
     createUserInToDb,
     getUsersFromDB,
+    getUserById,
 }
