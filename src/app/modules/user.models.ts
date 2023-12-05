@@ -1,4 +1,4 @@
-import { Schema, model } from 'mongoose';
+import { Schema, model } from "mongoose";
 import { TAddress, TFullName, TUser, UserModel } from "./users/user.interfae";
 import config from "../config";
 import bcrypt from "bcrypt";
@@ -30,6 +30,7 @@ const UserSchema = new Schema<TUser, UserModel>({
   isActive: { type: Boolean, required: [true, "Status is required!"] },
   hobbies: { type: [String], required: [true, "Hobbies are required!"] },
   address: { type: AddressSchema, required: [true, "Address is required!"] },
+  isDelete: { type: Boolean }, 
 });
 
 UserSchema.pre("save", async function (next) {
@@ -50,10 +51,14 @@ UserSchema.post("save", function (doc, next) {
   next();
 });
 
-// static method 
-UserSchema.statics.isUserExists = async function(userId: string){
-  const existingUser = await User.findOne({userId: userId}, {password: 0})
-  return existingUser
-}
+// static method
+UserSchema.statics.isUserExists = async function (userId: string) {
+  const existingUser = await User.findOne({ userId: userId }, { password: 0 });
+  return existingUser;
+};
+UserSchema.statics.deleteUser = async function (userId: string) {
+  const deletedUser = await User.updateOne({ userId: userId }, { isDelete: true });
+  return deletedUser;
+};
 
 export const User = model<TUser, UserModel>("User", UserSchema);

@@ -20,8 +20,14 @@ const getUserById = async (userId: string)=> {
     return result
 }
 
+const deleteUser = async (userId: string) => {
+    const result = await User.deleteUser(userId)
+    return result 
+}
+
 export const UsersServices = {
     createUserInToDb,
     getUsersFromDB,
     getUserById,
+    deleteUser,
 }
