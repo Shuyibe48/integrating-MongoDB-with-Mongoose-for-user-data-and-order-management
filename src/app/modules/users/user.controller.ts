@@ -69,8 +69,6 @@ const deleteUser = async (req: Request, res: Response) => {
     const { userId } = req.params;
     const result = await UsersServices.deleteUser(userId);
 
-    console.log(result)
-
     if (result.modifiedCount === 1) {
       res.status(200).json({
         success: true,

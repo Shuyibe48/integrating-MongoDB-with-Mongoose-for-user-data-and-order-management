@@ -61,4 +61,9 @@ UserSchema.statics.deleteUser = async function (userId: string) {
   return deletedUser;
 };
 
+UserSchema.statics.deleteUser = async function (userId: string) {
+  const deletedUser = await User.updateOne({ userId: userId }, { isDelete: true });
+  return deletedUser;
+};
+
 export const User = model<TUser, UserModel>("User", UserSchema);
