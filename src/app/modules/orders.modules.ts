@@ -1,10 +1,9 @@
 import { Schema, model } from "mongoose";
-import { TProduct } from "./orders/orders.interface";
+import { TOrder } from "./orders/orders.interface";
 
-const productSchema = new Schema<TProduct>({
+const OrderSchema = new Schema<TOrder>({
   userId: {
-    type: String,
-    required: [true, 'User Is is required']
+    type: Number
   },
   productName: {
     type: String,
@@ -21,4 +20,4 @@ const productSchema = new Schema<TProduct>({
 });
 
 
-export const Order = model<TProduct>('order', productSchema)
+export const Order = model<TOrder>('order', OrderSchema)

@@ -30,7 +30,7 @@ const UserSchema = new Schema<TUser, UserModel>({
   isActive: { type: Boolean, required: [true, "Status is required!"] },
   hobbies: { type: [String], required: [true, "Hobbies are required!"] },
   address: { type: AddressSchema, required: [true, "Address is required!"] },
-  isDelete: { type: Boolean }, 
+  isDelete: { type: Boolean },
 });
 
 UserSchema.pre("save", async function (next) {
@@ -57,13 +57,12 @@ UserSchema.statics.isUserExists = async function (userId: string) {
   return existingUser;
 };
 UserSchema.statics.deleteUser = async function (userId: string) {
-  const deletedUser = await User.updateOne({ userId: userId }, { isDelete: true });
+  const deletedUser = await User.updateOne(
+    { userId: userId },
+    { isDelete: true }
+  );
   return deletedUser;
 };
 
-UserSchema.statics.deleteUser = async function (userId: string) {
-  const deletedUser = await User.updateOne({ userId: userId }, { isDelete: true });
-  return deletedUser;
-};
 
 export const User = model<TUser, UserModel>("User", UserSchema);
