@@ -20,6 +20,26 @@ const createOrders = async (req: Request, res: Response) => {
   }
 };
 
+
+const retrieveAllOrdersForASpecificUser = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await OrdersServices.retrieveAllOrdersForASpecificUser(userId);
+    res.status(200).json({
+      success: true,
+      message: "success",
+      data: result,
+    });
+  } catch (err) {
+    res.status(400).json({
+      success: false,
+      message: "failed",
+      data: err,
+    });
+  }
+};
+
 export const OrdersControllers = {
   createOrders,
+  retrieveAllOrdersForASpecificUser,
 };

@@ -10,6 +10,13 @@ const createOrders = async (orderData: TOrder, userId: string) => {
   return result;
 };
 
+
+const retrieveAllOrdersForASpecificUser = async (userId: string) => {
+  const result = await Order.find({userId: userId})
+  return result;
+};
+
 export const OrdersServices = {
   createOrders,
+  retrieveAllOrdersForASpecificUser,
 };

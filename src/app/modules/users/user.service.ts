@@ -23,15 +23,20 @@ const getUserById = async (userId: string) => {
   return result;
 };
 
+const updateUserById = async (userId: string, updateData: TUser) => {
+  const result = await User.updateUser(userId, updateData);
+  return result;
+};
+
 const deleteUser = async (userId: string) => {
   const result = await User.deleteUser(userId);
   return result;
 };
 
-
 export const UsersServices = {
   createUserInToDb,
   getUsersFromDB,
   getUserById,
+  updateUserById,
   deleteUser,
 };

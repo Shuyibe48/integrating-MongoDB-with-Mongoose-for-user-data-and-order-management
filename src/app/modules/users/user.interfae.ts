@@ -26,5 +26,6 @@ export type TUser = {
 
 export interface UserModel extends Model<TUser> {
   isUserExists(userId: string): Promise<TUser | null>;
+  updateUser(userId: string, updateData: TUser): Promise<TUser | null>;
   deleteUser(userId: string): Promise<TUser | null>;
 }

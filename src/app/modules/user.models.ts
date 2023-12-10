@@ -56,6 +56,24 @@ UserSchema.statics.isUserExists = async function (userId: string) {
   const existingUser = await User.findOne({ userId: userId }, { password: 0 });
   return existingUser;
 };
+
+UserSchema.statics.updateUser = async function (userId: string, updateData) {
+  const query = { userId: userId };
+  const update = {
+    userId: updateData.userId,
+    username: updateData.username,
+    password: updateData.password,
+    fullName : updateData.fullName,
+    age: updateData.age,
+    email: updateData.email,
+    isActive: updateData.isActive,
+    hobbies: updateData.hobbies,
+    address: updateData.address,
+}
+  const updateUser = await User.findOneAndUpdate(query, update);
+  return updateUser;
+};
+
 UserSchema.statics.deleteUser = async function (userId: string) {
   const deletedUser = await User.updateOne(
     { userId: userId },
@@ -63,6 +81,5 @@ UserSchema.statics.deleteUser = async function (userId: string) {
   );
   return deletedUser;
 };
-
 
 export const User = model<TUser, UserModel>("User", UserSchema);
