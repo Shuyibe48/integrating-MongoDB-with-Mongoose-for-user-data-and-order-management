@@ -35,5 +35,6 @@ export interface UserModel extends Model<TUser> {
   isUserExists(userId: string): Promise<TUser | null>;
   updateUser(userId: string, updateData: TUser): Promise<TUser | null>;
   orderCreate(userId: string, orderData: TOrder): Promise<TOrder | null>;
+  getUserOrdersById(userId: string): Promise<TUser | null>;
   deleteUser(userId: string): Promise<TUser | null>;
 }

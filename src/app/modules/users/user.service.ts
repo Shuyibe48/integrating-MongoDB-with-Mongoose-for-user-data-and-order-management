@@ -25,10 +25,15 @@ const updateUserById = async (userId: string, updateData: TUser) => {
   return result;
 };
 
-const createOrder = async (userId: string, orderData: TOrder)=> {
-  const result =await User.orderCreate(userId, orderData)
-  return result
-}
+const createOrder = async (userId: string, orderData: TOrder) => {
+  const result = await User.orderCreate(userId, orderData);
+  return result;
+};
+
+const getOrderById = async (userId: string) => {
+  const result = await User.getUserOrdersById(userId);
+  return result;
+};
 
 const deleteUser = async (userId: string) => {
   const result = await User.deleteUser(userId);
@@ -41,5 +46,6 @@ export const UsersServices = {
   getUserById,
   updateUserById,
   createOrder,
+  getOrderById,
   deleteUser,
 };

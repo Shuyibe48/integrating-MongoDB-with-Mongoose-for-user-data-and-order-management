@@ -94,6 +94,11 @@ UserSchema.statics.orderCreate = async function (userId: string, orderData) {
   return createOrder;
 };
 
+UserSchema.statics.getUserOrdersById = async function (userId: string) {
+  const userOrder = await User.findOne({ userId: userId }, { order: 1 });
+  return userOrder;
+};
+
 UserSchema.statics.deleteUser = async function (userId: string) {
   const deletedUser = await User.updateOne(
     { userId: userId },

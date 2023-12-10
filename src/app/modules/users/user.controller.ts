@@ -120,6 +120,33 @@ const createOrder = async (req: Request, res: Response) => {
   }
 };
 
+const getOrderById = async (req: Request, res: Response) => {
+  try {
+    const { userId } = req.params;
+    const result = await UsersServices.getOrderById(userId);
+
+    if (result) {
+      res.status(200).json({
+        success: true,
+        message: "Order fetched successfully!",
+        data: result,
+      });
+    } else {
+      res.status(400).json({
+        success: false,
+        message: "No user found!",
+        data: result,
+      });
+    }
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || "Something went wrong!",
+      data: err,
+    });
+  }
+};
+
 const deleteUser = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
@@ -153,5 +180,6 @@ export const UserControllers = {
   getUserById,
   updateUserById,
   createOrder,
+  getOrderById,
   deleteUser,
 };
