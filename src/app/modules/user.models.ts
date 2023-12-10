@@ -1,5 +1,11 @@
 import { Schema, model } from "mongoose";
-import { TAddress, TFullName, TUser, UserModel } from "./users/user.interfae";
+import {
+  TAddress,
+  TFullName,
+  TOrder,
+  TUser,
+  UserModel,
+} from "./users/user.interfae";
 import config from "../config";
 import bcrypt from "bcrypt";
 
@@ -12,6 +18,12 @@ const AddressSchema = new Schema<TAddress>({
   street: { type: String, required: true },
   city: { type: String, required: true },
   country: { type: String, required: true },
+});
+
+const OrderSchema = new Schema<TOrder>({
+  productName: { type: String },
+  price: { type: Number },
+  quantity: { type: Number },
 });
 
 const UserSchema = new Schema<TUser, UserModel>({
@@ -31,6 +43,7 @@ const UserSchema = new Schema<TUser, UserModel>({
   hobbies: { type: [String], required: [true, "Hobbies are required!"] },
   address: { type: AddressSchema, required: [true, "Address is required!"] },
   isDelete: { type: Boolean },
+  order: { type: [OrderSchema] },
 });
 
 UserSchema.pre("save", async function (next) {
@@ -63,15 +76,22 @@ UserSchema.statics.updateUser = async function (userId: string, updateData) {
     userId: updateData.userId,
     username: updateData.username,
     password: updateData.password,
-    fullName : updateData.fullName,
+    fullName: updateData.fullName,
     age: updateData.age,
     email: updateData.email,
     isActive: updateData.isActive,
     hobbies: updateData.hobbies,
     address: updateData.address,
-}
+  };
   const updateUser = await User.findOneAndUpdate(query, update);
   return updateUser;
+};
+
+UserSchema.statics.orderCreate = async function (userId: string, orderData) {
+  const query = { userId: userId };
+  const order = { $push: { order: orderData } };
+  const createOrder = await User.findOneAndUpdate(query, order);
+  return createOrder;
 };
 
 UserSchema.statics.deleteUser = async function (userId: string) {
