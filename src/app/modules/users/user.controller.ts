@@ -78,28 +78,17 @@ const getUserById = async (req: Request, res: Response) => {
 const updateUserById = async (req: Request, res: Response) => {
   try {
     const { userId } = req.params;
-    const { user: updateData } = req.body;
+    const updateData = req.body;
     const result = await UsersServices.updateUserById(userId, updateData);
     const data = {
       ...result,
     };
     const { password, ...userWithoutPassword } = data._doc;
-    if (result) {
-      res.status(200).json({
-        success: true,
-        message: "User updated successfully!",
-        data: userWithoutPassword,
-      });
-    } else {
-      res.status(400).json({
-        success: false,
-        message: "User not found!",
-        error: {
-          code: 404,
-          description: "User not found!",
-        },
-      });
-    }
+    res.status(200).json({
+      success: true,
+      message: "User updated successfully!",
+      data: userWithoutPassword,
+    });
   } catch (err: any) {
     res.status(500).json({
       success: false,

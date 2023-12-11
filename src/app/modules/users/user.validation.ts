@@ -31,13 +31,13 @@ export const OrderValidationSchema = z.object({
     .string()
     .min(1, { message: "Product name must not be empty" })
     .max(255, { message: "Product name is too long" }),
-  price: z.number({ message: "Price must be a valid number" }),
-  quantity: z.number({ message: "Quantity must be a valid number" }),
+  price: z.number(),
+  quantity: z.number(),
 });
 
 // Define Zod schema for the User
 const UserValidationSchema = z.object({
-  userId: z.number({ message: "User ID must be a valid number" }),
+  userId: z.number(),
   username: z
     .string()
     .min(1, { message: "Username must not be empty" })
@@ -47,9 +47,9 @@ const UserValidationSchema = z.object({
     .min(1, { message: "Password must not be empty" })
     .max(255, { message: "Password is too long" }),
   fullName: FullNameValidationSchema,
-  age: z.number({ message: "Age must be a valid number" }),
+  age: z.number(),
   email: z.string().email({ message: "Email must be a valid email address" }),
-  isActive: z.boolean({ message: "isActive must be a boolean value" }),
+  isActive: z.boolean(),
   hobbies: z.array(
     z
       .string()
@@ -57,12 +57,8 @@ const UserValidationSchema = z.object({
       .max(255, { message: "Hobby is too long" })
   ),
   address: AddressValidationSchema,
-  isDelete: z
-    .boolean()
-    .optional({ message: "isDelete must be a boolean value" }),
-  order: z
-    .array(OrderValidationSchema)
-    .optional({ message: "Order must be an array of valid order items" }),
+  isDelete: z.boolean().optional(),
+  order: z.array(OrderValidationSchema).optional(),
 });
 
 export default UserValidationSchema;

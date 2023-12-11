@@ -25,6 +25,11 @@ const AddressSchema = new mongoose_1.Schema({
     city: { type: String, required: true },
     country: { type: String, required: true },
 });
+const OrderSchema = new mongoose_1.Schema({
+    productName: { type: String },
+    price: { type: Number },
+    quantity: { type: Number },
+});
 const UserSchema = new mongoose_1.Schema({
     userId: {
         type: Number,
@@ -37,10 +42,12 @@ const UserSchema = new mongoose_1.Schema({
         required: [true, "Full Name is required!"],
     },
     age: { type: Number, required: [true, "Age is required!"] },
-    email: { type: String, required: [true, "Email is required!"] },
+    email: { type: String, required: [true, "Email is required!"], unique: true },
     isActive: { type: Boolean, required: [true, "Status is required!"] },
     hobbies: { type: [String], required: [true, "Hobbies are required!"] },
     address: { type: AddressSchema, required: [true, "Address is required!"] },
+    isDelete: { type: Boolean, default: false },
+    order: { type: [OrderSchema] },
 });
 UserSchema.pre("save", function (next) {
     return __awaiter(this, void 0, void 0, function* () {
@@ -56,4 +63,77 @@ UserSchema.post("save", function (doc, next) {
     doc.password = "";
     next();
 });
+// static method
+UserSchema.statics.isUserExists = function (userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const existingUser = yield exports.User.findOne({ userId: userId, isDelete: false }, { password: 0 });
+        return existingUser;
+    });
+};
+UserSchema.statics.updateUser = function (userId, updateData) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const query = { userId: userId, isDelete: false };
+        const update = {
+            userId: updateData.userId,
+            username: updateData.username,
+            password: updateData.password,
+            fullName: updateData.fullName,
+            age: updateData.age,
+            email: updateData.email,
+            isActive: updateData.isActive,
+            hobbies: updateData.hobbies,
+            address: updateData.address,
+        };
+        const updateUser = yield exports.User.findOneAndUpdate(query, update);
+        return updateUser;
+    });
+};
+UserSchema.statics.orderCreate = function (userId, orderData) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const query = { userId: userId, isDelete: false };
+        const order = { $push: { order: orderData } };
+        const createOrder = yield exports.User.findOneAndUpdate(query, order);
+        return createOrder;
+    });
+};
+UserSchema.statics.getUserOrdersById = function (userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const userOrder = yield exports.User.findOne({ userId: userId, isDelete: false }, { order: 1 });
+        return userOrder;
+    });
+};
+UserSchema.statics.getOrderSum = function (userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const id = parseFloat(userId);
+        const sum = yield exports.User.aggregate([
+            {
+                $match: {
+                    userId: id,
+                    isDelete: false,
+                },
+            },
+            {
+                $unwind: "$order",
+            },
+            {
+                $group: {
+                    _id: null,
+                    totalPrice: { $sum: "$order.price" },
+                },
+            },
+            {
+                $project: {
+                    totalPrice: 1,
+                },
+            },
+        ]);
+        return sum;
+    });
+};
+UserSchema.statics.deleteUser = function (userId) {
+    return __awaiter(this, void 0, void 0, function* () {
+        const deletedUser = yield exports.User.updateOne({ userId: userId, isDelete: false }, { isDelete: true });
+        return deletedUser;
+    });
+};
 exports.User = (0, mongoose_1.model)("User", UserSchema);

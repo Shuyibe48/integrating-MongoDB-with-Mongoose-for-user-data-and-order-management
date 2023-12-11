@@ -120,17 +120,30 @@ UserSchema.statics.getOrderSum = async function (userId: string) {
 
     {
       $group: {
-        _id: null,
+        _id: "$order",
+        totalQuantity: { $sum: "$order.quantity" },
         totalPrice: { $sum: "$order.price" },
       },
     },
 
     {
       $project: {
+        _id: 0,
+        totalQuantity: 1,
         totalPrice: 1,
+        multiply: { $multiply: ["$totalPrice", "$totalQuantity"] },
+      },
+    },
+
+    {
+      $group: {
+        _id: null,
+        totalPrice: { $sum: "$multiply" },
       },
     },
   ]);
+
+  console.log(sum);
 
   return sum;
 };
