@@ -9,8 +9,14 @@ const createUserInToDb = async (userData: TUser) => {
 
 const getUsersFromDB = async () => {
   const result = await User.find(
-    {},
-    { username: 1, fullName: 1, age: 1, email: 1, address: 1, order: 1 }
+    { isDelete: false },
+    {
+      username: 1,
+      fullName: 1,
+      age: 1,
+      email: 1,
+      address: 1,
+    }
   );
   return result;
 };
@@ -35,6 +41,11 @@ const getOrderById = async (userId: string) => {
   return result;
 };
 
+const getOrderSum = async (userId: string) => {
+  const result = await User.getOrderSum(userId);
+  return result;
+};
+
 const deleteUser = async (userId: string) => {
   const result = await User.deleteUser(userId);
   return result;
@@ -47,5 +58,6 @@ export const UsersServices = {
   updateUserById,
   createOrder,
   getOrderById,
+  getOrderSum,
   deleteUser,
 };

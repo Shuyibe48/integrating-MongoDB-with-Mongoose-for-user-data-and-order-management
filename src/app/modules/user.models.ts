@@ -38,11 +38,11 @@ const UserSchema = new Schema<TUser, UserModel>({
     required: [true, "Full Name is required!"],
   },
   age: { type: Number, required: [true, "Age is required!"] },
-  email: { type: String, required: [true, "Email is required!"] },
+  email: { type: String, required: [true, "Email is required!"], unique: true },
   isActive: { type: Boolean, required: [true, "Status is required!"] },
   hobbies: { type: [String], required: [true, "Hobbies are required!"] },
   address: { type: AddressSchema, required: [true, "Address is required!"] },
-  isDelete: { type: Boolean },
+  isDelete: { type: Boolean, default: false },
   order: { type: [OrderSchema] },
 });
 
@@ -66,12 +66,15 @@ UserSchema.post("save", function (doc, next) {
 
 // static method
 UserSchema.statics.isUserExists = async function (userId: string) {
-  const existingUser = await User.findOne({ userId: userId }, { password: 0 });
+  const existingUser = await User.findOne(
+    { userId: userId, isDelete: false },
+    { password: 0 }
+  );
   return existingUser;
 };
 
 UserSchema.statics.updateUser = async function (userId: string, updateData) {
-  const query = { userId: userId };
+  const query = { userId: userId, isDelete: false };
   const update = {
     userId: updateData.userId,
     username: updateData.username,
@@ -88,20 +91,53 @@ UserSchema.statics.updateUser = async function (userId: string, updateData) {
 };
 
 UserSchema.statics.orderCreate = async function (userId: string, orderData) {
-  const query = { userId: userId };
+  const query = { userId: userId, isDelete: false };
   const order = { $push: { order: orderData } };
   const createOrder = await User.findOneAndUpdate(query, order);
   return createOrder;
 };
 
 UserSchema.statics.getUserOrdersById = async function (userId: string) {
-  const userOrder = await User.findOne({ userId: userId }, { order: 1 });
+  const userOrder = await User.findOne(
+    { userId: userId, isDelete: false },
+    { order: 1 }
+  );
   return userOrder;
+};
+UserSchema.statics.getOrderSum = async function (userId: string) {
+  const id = parseFloat(userId);
+  const sum = await User.aggregate([
+    {
+      $match: {
+        userId: id,
+        isDelete: false,
+      },
+    },
+
+    {
+      $unwind: "$order",
+    },
+
+    {
+      $group: {
+        _id: null,
+        totalPrice: { $sum: "$order.price" },
+      },
+    },
+
+    {
+      $project: {
+        totalPrice: 1,
+      },
+    },
+  ]);
+
+  return sum;
 };
 
 UserSchema.statics.deleteUser = async function (userId: string) {
   const deletedUser = await User.updateOne(
-    { userId: userId },
+    { userId: userId, isDelete: false },
     { isDelete: true }
   );
   return deletedUser;
