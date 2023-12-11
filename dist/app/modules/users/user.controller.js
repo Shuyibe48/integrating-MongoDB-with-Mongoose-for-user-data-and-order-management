@@ -73,7 +73,7 @@ const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         res.status(200).json({
             success: true,
             message: "Users fetched successfully!",
-            data: result[0],
+            data: result,
         });
     }
     catch (err) {
@@ -179,12 +179,11 @@ const getOrderById = (req, res) => __awaiter(void 0, void 0, void 0, function* (
         const result = yield user_service_1.UsersServices.getOrderById(userId);
         const data = Object.assign({}, result);
         const _c = data._doc, { _id } = _c, userWithout_id = __rest(_c, ["_id"]);
-        console.log(userWithout_id);
         if (result) {
             res.status(200).json({
                 success: true,
                 message: "Order fetched successfully!",
-                data: result,
+                data: userWithout_id,
             });
         }
         else {

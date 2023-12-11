@@ -143,8 +143,6 @@ UserSchema.statics.getOrderSum = async function (userId: string) {
     },
   ]);
 
-  console.log(sum);
-
   return sum;
 };
 
