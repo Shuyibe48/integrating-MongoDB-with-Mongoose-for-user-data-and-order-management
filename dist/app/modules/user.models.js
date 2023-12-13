@@ -14,8 +14,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
 const mongoose_1 = require("mongoose");
-const config_1 = __importDefault(require("../config"));
-const bcrypt_1 = __importDefault(require("bcrypt"));
+const argon2_1 = __importDefault(require("argon2"));
 const FullNameSchema = new mongoose_1.Schema({
     firstName: { type: String, required: true },
     lastName: { type: String, required: true },
@@ -54,7 +53,7 @@ UserSchema.pre("save", function (next) {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         const user = this;
         // To hash a password with bcrypt
-        user.password = yield bcrypt_1.default.hash(user.password, Number(config_1.default.bcrypt_salt_rounds));
+        user.password = yield argon2_1.default.hash(user.password);
         next();
     });
 });

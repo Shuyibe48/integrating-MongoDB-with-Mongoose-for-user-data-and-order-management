@@ -6,8 +6,7 @@ import {
   TUser,
   UserModel,
 } from "./users/user.interfae";
-import config from "../config";
-import bcrypt from "bcrypt";
+import argon2 from "argon2";
 
 const FullNameSchema = new Schema<TFullName>({
   firstName: { type: String, required: true },
@@ -50,10 +49,7 @@ UserSchema.pre("save", async function (next) {
   // eslint-disable-next-line @typescript-eslint/no-this-alias
   const user = this;
   // To hash a password with bcrypt
-  user.password = await bcrypt.hash(
-    user.password,
-    Number(config.bcrypt_salt_rounds)
-  );
+  user.password = await argon2.hash(user.password);
   next();
 });
 
